@@ -93,13 +93,7 @@
             padding-bottom: 8px;
         }
 
-        .auth-form {
-            display: none;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        input {
+        input, textarea {
             width: 100%;
             padding: 12px;
             margin: 8px 0;
@@ -108,6 +102,12 @@
             background-color: #333;
             color: white;
             box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 80px;
+            font-family: inherit;
         }
 
         .checkbox-container {
@@ -148,19 +148,13 @@
             margin-bottom: 10px;
         }
 
-        audio {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        /* Server & Admin styles */
         .server-log {
             background-color: #000;
             color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
             padding: 15px;
             border-radius: 6px;
-            max-height: 120px;
+            max-height: 150px;
             overflow-y: auto;
             margin-bottom: 20px;
             font-size: 14px;
@@ -192,17 +186,13 @@
         }
 
         .premium-toggle-btn { background-color: #f1c40f; color: black; }
+        
         .add-manual-box {
             background-color: #1c1c1c;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
             border: 1px dashed var(--primary-color);
-        }
-
-        .flex-admin-inputs {
-            display: flex;
-            gap: 10px;
         }
 
         .submit-btn {
@@ -217,18 +207,9 @@
             margin-top: 10px;
         }
 
-        .switch-form-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #aaa;
-            cursor: pointer;
-        }
-
-        .switch-form-link span {
-            color: var(--primary-color);
-            text-decoration: underline;
-        }
+        .auth-form { display: none; max-width: 400px; margin: 0 auto; }
+        .switch-form-link { text-align: center; margin-top: 15px; font-size: 14px; color: #aaa; cursor: pointer; }
+        .switch-form-link span { color: var(--primary-color); text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -253,7 +234,7 @@
             <input type="email" id="regEmail" placeholder="Adresse e-mail" required>
             <input type="password" id="regPassword" placeholder="Mot de passe" required>
             <div class="checkbox-container">
-                <input type="checkbox" id="regPremium">
+                <input type="checkbox" id="regPremium" checked>
                 <label for="regPremium">💎 Demander le statut Créateur Premium</label>
             </div>
             <button type="submit" class="submit-btn">S'inscrire</button>
@@ -272,9 +253,9 @@
     </div>
 
     <div class="section">
-        <h2>🖥️ Serveurs de Modération Automatique</h2>
+        <h2>🖥️ Serveur de Modération Contextuel TRANSFR</h2>
         <div class="server-log" id="serverLog">
-            [Système] Serveur TRANSFR en ligne. Surveillance active des fichiers.
+            [Système] IA de modération en ligne. Mode contextuel activé (Analyse du rythme et du sens).
         </div>
     </div>
 
@@ -291,33 +272,31 @@
 
     <div class="section" id="creatorSection" style="display: none;">
         <h2>🌟 Espace Créateur Premium</h2>
-        <p>Propose tes fichiers .mp3. Le serveur va vérifier les gros mots tout seul !</p>
+        <p>Notre serveur intelligent analyse si les gros mots font partie du rythme ou s'ils sont méchants !</p>
         <form id="uploadForm">
             <input type="text" id="musicTitle" placeholder="Titre de la chanson" required>
             <input type="text" id="musicArtist" placeholder="Ton nom d'artiste" required>
+            <textarea id="musicContext" placeholder="Paroles ou style de musique (Ex: 'C'est du rap, le gros mot est dans le rythme')" required></textarea>
             <input type="file" id="musicFile" accept="audio/mp3, audio/*" required>
-            <button type="submit" class="submit-btn">Envoyer la musique au serveur</button>
+            <button type="submit" class="submit-btn">Envoyer au serveur intelligent</button>
         </form>
     </div>
 
     <div class="section" id="adminSection" style="display: none;">
         <h2>🛠️ Panneau de Contrôle du Directeur</h2>
         
-        <h3>1. Ajouter un membre à la main (Cases Écritures)</h3>
-        <p>Tapes avec ton clavier dans les cases ci-dessous pour créer ou ajouter quelqu'un :</p>
+        <h3>1. Ajouter un membre avec le clavier</h3>
         <div class="add-manual-box">
-            <div class="flex-admin-inputs">
-                <input type="text" id="adminAddName" placeholder="Nom de la personne à ajouter">
-                <input type="email" id="adminAddEmail" placeholder="Son adresse e-mail">
-            </div>
+            <input type="text" id="adminAddName" placeholder="Nom de la personne">
+            <input type="email" id="adminAddEmail" placeholder="Adresse e-mail">
             <div class="checkbox-container">
                 <input type="checkbox" id="adminAddPremium" checked>
-                <label for="adminAddPremium">Lui donner le statut ⭐ Premium Direct</label>
+                <label for="adminAddPremium">Activer le statut ⭐ Premium</label>
             </div>
-            <button type="button" class="submit-btn" id="btnAdminAddManual" style="background-color: #ffffff; color: #000;">Ajouter le membre au tableau</button>
+            <button type="button" class="submit-btn" id="btnAdminAddManual" style="background-color: #fff; color: #000;">Ajouter au tableau</button>
         </div>
 
-        <h3>2. Liste des utilisateurs connectés / inscrits</h3>
+        <h3>2. Liste des utilisateurs</h3>
         <table class="admin-table">
             <thead>
                 <tr>
@@ -327,15 +306,15 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="adminUsersTable">
-                </tbody>
+            <tbody id="adminUsersTable"></tbody>
         </table>
     </div>
 
 </div>
 
 <script>
-    const listeNoireGrosMots = ["merde", "con", "salope", "connard", "pute", "gros mot"];
+    // Gros mots surveillés par l'IA
+    const insultesGraves = ["fils de pute", "connard", "salope", "pute", "merde"];
 
     if (!localStorage.getItem('users')) {
         localStorage.setItem('users', JSON.stringify([]));
@@ -348,150 +327,89 @@
     const creatorSection = document.getElementById('creatorSection');
     const adminSection = document.getElementById('adminSection');
     const serverLog = document.getElementById('serverLog');
+    const musicGrid = document.getElementById('musicGrid');
+    const adminUsersTable = document.getElementById('adminUsersTable');
     
     const loginNavBtn = document.getElementById('loginNavBtn');
     const registerNavBtn = document.getElementById('registerNavBtn');
     const logoutNavBtn = document.getElementById('logoutNavBtn');
     const adminPanelBtn = document.getElementById('adminPanelBtn');
     const headerUserStatus = document.getElementById('headerUserStatus');
-    const musicGrid = document.getElementById('musicGrid');
-    const adminUsersTable = document.getElementById('adminUsersTable');
 
     function logServeur(msg, type = "info") {
         const time = new Date().toLocaleTimeString();
         let color = "#00ff00";
         if (type === "error") color = "#ff4d4d";
         if (type === "success") color = "#1ed760";
+        if (type === "warning") color = "#f1c40f";
         serverLog.innerHTML += `<br><span style="color:${color}">[${time}] ${msg}</span>`;
         serverLog.scrollTop = serverLog.scrollHeight;
     }
 
-    // Navigation Buttons
+    // Nav
     registerNavBtn.addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
     loginNavBtn.addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
     document.getElementById('toLoginLink').addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
     document.getElementById('toRegisterLink').addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
+    function closeAllForms() { registerSection.style.display = 'none'; loginSection.style.display = 'none'; }
 
-    function closeAllForms() {
-        registerSection.style.display = 'none';
-        loginSection.style.display = 'none';
-    }
-
-    // Code secret Directeur
+    // Admin Access
     adminPanelBtn.addEventListener('click', () => {
-        let code = prompt("Entrez le code secret Directeur :");
+        let code = prompt("Code secret Directeur :");
         if (code === "1944") {
             adminSection.style.display = adminSection.style.display === 'none' ? 'block' : 'none';
             updateAdminPanel();
-        } else {
-            alert("Code Directeur invalide !");
-        }
+        } else { alert("Code faux !"); }
     });
 
-    // Inscription standard
+    // Inscription / Connexion
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = document.getElementById('regUsername').value;
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
         const isPremium = document.getElementById('regPremium').checked;
-
         let users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(u => u.email === email)) { alert("Cet e-mail est déjà pris !"); return; }
-
+        if (users.find(u => u.email === email)) { alert("Email déjà pris !"); return; }
         users.push({ username, email, password, isPremium });
         localStorage.setItem('users', JSON.stringify(users));
-        
-        logServeur(`Nouveau compte utilisateur : ${username}`);
-        alert("Inscription validée !");
-        this.reset();
-        closeAllForms();
-        loginSection.style.display = 'block';
+        logServeur(`Compte créé : ${username}`);
+        this.reset(); closeAllForms(); loginSection.style.display = 'block';
     });
 
-    // Connexion
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-
         let users = JSON.parse(localStorage.getItem('users'));
         let user = users.find(u => u.email === email && u.password === password);
-
-        if (user) {
-            currentUser = user;
-            alert("Bienvenue sur TRANSFR !");
-            closeAllForms();
-            updateUI();
-        } else {
-            alert("Identifiants faux !");
-        }
+        if (user) { currentUser = user; closeAllForms(); updateUI(); } else { alert("Faux !"); }
     });
 
-    logoutNavBtn.addEventListener('click', () => {
-        currentUser = null;
-        updateUI();
-    });
+    logoutNavBtn.addEventListener('click', () => { currentUser = null; updateUI(); });
 
-    // AJOUTER UN MEMBRE À LA MAIN DEPUIS L'ADMIN (TES NOUVELLES CASES)
+    // Ajouter manuellement dans les cases de texte avec le clavier
     document.getElementById('btnAdminAddManual').addEventListener('click', function() {
         const nameInput = document.getElementById('adminAddName');
         const emailInput = document.getElementById('adminAddEmail');
-        const premiumCheck = document.getElementById('adminAddPremium').checked;
-
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-
-        if (name === "" || email === "") {
-            alert("S'il te plaît, remplis la case Nom et la case E-mail avec ton clavier !");
-            return;
-        }
-
+        const isPremium = document.getElementById('adminAddPremium').checked;
+        if (nameInput.value === "" || emailInput.value === "") { alert("Remplis les cases !"); return; }
         let users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(u => u.email === email)) {
-            alert("Cet e-mail est déjà enregistré dans la liste.");
-            return;
-        }
-
-        // Ajouter la personne au système
-        users.push({
-            username: name,
-            email: email,
-            password: "123", // mot de passe automatique pour les tests
-            isPremium: premiumCheck
-        });
-
+        users.push({ username: nameInput.value, email: emailInput.value, password: "123", isPremium });
         localStorage.setItem('users', JSON.stringify(users));
-        logServeur(`[Admin] Le Directeur a ajouté manuellement : ${name} (${premiumCheck ? 'Premium' : 'Normal'})`, "success");
-        
-        // Vider les cases d'écriture après l'ajout
-        nameInput.value = "";
-        emailInput.value = "";
-        
-        // Mettre à jour l'affichage
-        updateAdminPanel();
-        updateUI();
-        alert("Membre ajouté au tableau avec succès !");
+        logServeur(`[Admin] Ajout manuel de : ${nameInput.value}`, "success");
+        nameInput.value = ""; emailInput.value = "";
+        updateAdminPanel(); updateUI();
     });
 
     function updateUI() {
         if (currentUser) {
-            loginNavBtn.style.display = 'none';
-            registerNavBtn.style.display = 'none';
-            logoutNavBtn.style.display = 'block';
-            if (currentUser.isPremium) {
-                headerUserStatus.textContent = currentUser.username + " (⭐ Premium)";
-                creatorSection.style.display = 'block';
-            } else {
-                headerUserStatus.textContent = currentUser.username + " (Membre)";
-                creatorSection.style.display = 'none';
-            }
+            loginNavBtn.style.display = 'none'; registerNavBtn.style.display = 'none'; logoutNavBtn.style.display = 'block';
+            if (currentUser.isPremium) { headerUserStatus.textContent = currentUser.username + " (⭐ Premium)"; creatorSection.style.display = 'block'; }
+            else { headerUserStatus.textContent = currentUser.username + " (Membre)"; creatorSection.style.display = 'none'; }
         } else {
-            loginNavBtn.style.display = 'block';
-            registerNavBtn.style.display = 'block';
-            logoutNavBtn.style.display = 'none';
-            headerUserStatus.textContent = "Visiteur";
-            creatorSection.style.display = 'none';
+            loginNavBtn.style.display = 'block'; registerNavBtn.style.display = 'block'; logoutNavBtn.style.display = 'none';
+            headerUserStatus.textContent = "Visiteur"; creatorSection.style.display = 'none';
         }
         updateAdminPanel();
     }
@@ -499,25 +417,12 @@
     function updateAdminPanel() {
         let users = JSON.parse(localStorage.getItem('users')) || [];
         adminUsersTable.innerHTML = '';
-
-        if (users.length === 0) {
-            adminUsersTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#aaa;">Aucun membre dans le tableau. Utilise les cases ci-dessus pour en ajouter !</td></tr>`;
-        } else {
-            users.forEach((u) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${u.username}</strong></td>
-                    <td>${u.email}</td>
-                    <td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
-                    <td>
-                        <button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">
-                            ${u.isPremium ? 'Retirer Premium' : 'Rendre Premium'}
-                        </button>
-                    </td>
-                `;
-                adminUsersTable.appendChild(tr);
-            });
-        }
+        users.forEach((u) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${u.username}</strong></td><td>${u.email}</td><td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
+            <td><button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Changer</button></td>`;
+            adminUsersTable.appendChild(tr);
+        });
     }
 
     window.toggleUserPremium = function(email) {
@@ -527,48 +432,68 @@
             u.isPremium = !u.isPremium;
             localStorage.setItem('users', JSON.stringify(users));
             if (currentUser && currentUser.email === email) { currentUser.isPremium = u.isPremium; }
-            logServeur(`Statut modifié pour ${u.username} (Premium: ${u.isPremium})`);
             updateUI();
         }
     };
 
-    // MODÉRATION AUTOMATIQUE DES MP3 ENVOYÉS
+    // LA MODÉRATION INTELLIGENTE CONTEXTUELLE
     document.getElementById('uploadForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const title = document.getElementById('musicTitle').value;
         const artist = document.getElementById('musicArtist').value;
+        const context = document.getElementById('musicContext').value.toLowerCase();
         const fileInput = document.getElementById('musicFile');
         const file = fileInput.files[0];
 
         if (!file) return;
 
-        logServeur(`Serveur : Analyse du fichier de ${currentUser.username}...`);
+        logServeur(`Analyse contextuelle du morceau de ${currentUser.username}...`);
 
-        let checkText = (title + " " + artist).toLowerCase();
-        let hasBadWord = listeNoireGrosMots.some(word => checkText.includes(word));
+        let texteTitreEtArtiste = (title + " " + artist).toLowerCase();
+        
+        // 1. Est-ce qu'il y a un gros mot dans le Titre ou l'Artiste ? (Interdit !)
+        let grosMotDansTitre = insultesGraves.some(word => texteTitreEtArtiste.includes(word));
+        
+        // 2. Est-ce qu'il y a un gros mot dans l'explication/paroles ?
+        let grosMotDansParoles = insultesGraves.some(word => context.includes(word));
+
+        // 3. Est-ce que l'utilisateur a précisé que c'est pour le rythme/style ?
+        let pourLeRythme = context.includes("rythme") || context.includes("rap") || context.includes("style") || context.includes("sens");
 
         setTimeout(() => {
-            if (hasBadWord) {
-                logServeur(`[REFUSÉ AUTOMATIQUEMENT] Gros mot détecté dans la demande de publication !`, "error");
-                alert("Le serveur automatique a refusé le morceau à cause d'un mot interdit !");
-            } else {
-                logServeur(`[APPROUVÉ AUTOMATIQUEMENT] Aucun gros mot détecté. Publication en cours.`, "success");
-                
-                const fileURL = URL.createObjectURL(file);
-                const card = document.createElement('div');
-                card.className = 'music-card';
-                card.innerHTML = `
-                    <p>${title}</p>
-                    <div class="artist">${artist}</div>
-                    <audio controls src="${fileURL}"></audio>
-                `;
-                musicGrid.appendChild(card);
-                alert("Fichier validé par les serveurs et mis en ligne !");
+            if (grosMotDansTitre) {
+                // Refus immédiat si c'est affiché publiquement sur le titre
+                logServeur(`[REFUSÉ] Gros mot détecté directement dans le TITRE ou l'ARTISTE.`, "error");
+                alert("Le serveur a refusé : Pas de gros mots visibles dans le titre !");
+            } 
+            else if (grosMotDansParoles && !pourLeRythme) {
+                // Refus s'il y a un gros mot mais pas d'explication artistique (attaque gratuite)
+                logServeur(`[REFUSÉ] Insulte détectée sans contexte artistique approprié.`, "error");
+                alert("Le serveur a détecté une insulte gratuite non justifiée par le rythme.");
             }
-        }, 500);
+            else if (grosMotDansParoles && pourLeRythme) {
+                // Validation acceptée car c'est dans le rythme de la musique !
+                logServeur(`[APPROUVÉ - RYTHME] Gros mot détecté mais validé : Utilisé artistiquement dans le rythme.`, "warning");
+                publierMusique(title, artist, file);
+            }
+            else {
+                // Tout est parfaitement propre
+                logServeur(`[APPROUVÉ] Morceau parfaitement conforme et sécurisé.`, "success");
+                publierMusique(title, artist, file);
+            }
+        }, 800);
 
         this.reset();
     });
+
+    function publierMusique(title, artist, file) {
+        const fileURL = URL.createObjectURL(file);
+        const card = document.createElement('div');
+        card.className = 'music-card';
+        card.innerHTML = `<p>${title}</p><div class="artist">${artist}</div><audio controls src="${fileURL}"></audio>`;
+        musicGrid.appendChild(card);
+        alert("Le serveur intelligent a publié ta musique !");
+    }
 </script>
 
 </body>
