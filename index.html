@@ -134,24 +134,38 @@
             margin-top: 15px;
         }
 
+        /* CORRECTION ICI : Largeur augmentée et box-sizing pour que rien ne dépasse */
         .music-card {
             background-color: var(--bg-card);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
-            width: 200px;
+            width: 240px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .music-card p {
             margin: 5px 0;
             font-weight: bold;
+            word-wrap: break-word;
         }
 
         .music-card .artist {
             font-size: 14px;
             color: #b3b3b3;
             margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        /* CORRECTION ICI : Le lecteur s'adapte parfaitement à la carte */
+        audio {
+            width: 100%;
+            margin-top: auto;
+            border-radius: 4px;
         }
 
         .server-log {
@@ -372,7 +386,7 @@
         } else { alert("Code faux !"); }
     });
 
-    // Inscription (Démarre à 0 points, non premium)
+    // Inscription
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = document.getElementById('regUsername').value;
@@ -412,7 +426,7 @@
         updateUI();
     });
 
-    // AJOUTER MANUELLEMENT UN MEMBRE DEPUIS L'ADMIN
+    // Ajouter manuellement un membre
     document.getElementById('btnAdminAddManual').addEventListener('click', function() {
         const nameInput = document.getElementById('adminAddName');
         const emailInput = document.getElementById('adminAddEmail');
@@ -425,37 +439,30 @@
         updateAdminPanel(); updateUI();
     });
 
-    // COMPTEUR DE POINTS INTELLIGENT (1 minute = 1 point)
+    // Compteur de points (1 minute = 1 point)
     function demarrerCompteurPoints() {
         clearInterval(timerPoints);
-        
-        // Mettre à jour l'affichage au démarrage
         userPointsSpan.textContent = currentUser.points;
-        timeOnlineSpan.textContent = currentUser.points; // Vu que 1 point = 1 minute
+        timeOnlineSpan.textContent = currentUser.points;
 
-        // Lance une boucle toutes les 60 secondes (60000 millisecondes)
         timerPoints = setInterval(() => {
             if (currentUser && !currentUser.isPremium) {
                 currentUser.points += 1;
                 
-                // Sauvegarder dans la liste générale
                 let users = JSON.parse(localStorage.getItem('users'));
                 let u = users.find(user => user.email === currentUser.email);
                 if (u) {
                     u.points = currentUser.points;
                     
-                    // VÉRIFICATION AUTOMATIQUE DU SEUIL DE 1000 POINTS !
                     if (u.points >= 1000) {
                         u.isPremium = true;
                         currentUser.isPremium = true;
                         logServeur(`🏆 [PREMIUM DÉBLOQUÉ] ${currentUser.username} a atteint 1000 points d'écoute !`, "success");
                         alert("Félicitations 🎉 ! Tu as accumulé 1000 points sur TRANSFR ! Tu es désormais membre Premium et tu as accès à l'Espace Créateur !");
                     }
-                    
                     localStorage.setItem('users', JSON.stringify(users));
                 }
 
-                // Mettre à jour l'écran
                 userPointsSpan.textContent = currentUser.points;
                 timeOnlineSpan.textContent = currentUser.points;
                 updateUI();
@@ -498,15 +505,14 @@
                 <td><span style="color:var(--primary-color); font-weight:bold;">${u.points} pts</span></td>
                 <td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
                 <td>
-                    <button class="action-mini-btn cheat-btn" onclick="ajouterPointsCheat('${u.email}')">+500 pts (Triche Directeur)</button>
-                    <button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Forcer Statut</button>
+                    <button class="action-mini-btn cheat-btn" onclick="ajouterPointsCheat('${u.email}')">+500 pts</button>
+                    <button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Forcer</button>
                 </td>
             `;
             adminUsersTable.appendChild(tr);
         });
     }
 
-    // Bouton de triche exclusif pour toi (Le Directeur) pour tester sans attendre 1000 minutes !
     window.ajouterPointsCheat = function(email) {
         let users = JSON.parse(localStorage.getItem('users'));
         let u = users.find(user => user.email === email);
@@ -518,11 +524,8 @@
             if (currentUser && currentUser.email === email) { 
                 currentUser.points = u.points;
                 currentUser.isPremium = u.isPremium;
-                if(currentUser.isPremium) {
-                    alert("Triche Admin : Tu t'es ajouté 500 points. Tu as dépassé les 1000 points et débloqué le Premium !");
-                }
             }
-            logServeur(`[Admin] Le Directeur a donné +500 points à ${u.username}`);
+            logServeur(`[Admin] Points ajoutés à ${u.username}`);
             updateUI();
         }
     };
@@ -532,14 +535,14 @@
         let u = users.find(user => user.email === email);
         if (u) {
             u.isPremium = !u.isPremium;
-            if (u.isPremium && u.points < 1000) { u.points = 1000; } // Ajuste les points s'il est forcé premium
+            if (u.isPremium && u.points < 1000) { u.points = 1000; }
             localStorage.setItem('users', JSON.stringify(users));
             if (currentUser && currentUser.email === email) { currentUser.isPremium = u.isPremium; currentUser.points = u.points; }
             updateUI();
         }
     };
 
-    // MODÉRATION INTELLIGENTE CONTEXTUELLE
+    // Modération contextuelle
     document.getElementById('uploadForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const title = document.getElementById('musicTitle').value;
