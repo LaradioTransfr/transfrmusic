@@ -110,15 +110,21 @@
             font-family: inherit;
         }
 
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
+        /* Barre des tâches des Points */
+        .points-box {
+            background-color: #181818;
+            border: 2px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
         }
 
-        .checkbox-container input {
-            width: auto;
+        .points-count {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 24px;
         }
 
         .music-grid {
@@ -154,7 +160,7 @@
             font-family: 'Courier New', Courier, monospace;
             padding: 15px;
             border-radius: 6px;
-            max-height: 150px;
+            max-height: 120px;
             overflow-y: auto;
             margin-bottom: 20px;
             font-size: 14px;
@@ -183,9 +189,11 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            margin-right: 5px;
         }
 
         .premium-toggle-btn { background-color: #f1c40f; color: black; }
+        .cheat-btn { background-color: #3498db; color: white; }
         
         .add-manual-box {
             background-color: #1c1c1c;
@@ -227,16 +235,18 @@
 
 <div class="container">
 
+    <div class="section points-box" id="pointsBox" style="display: none;">
+        ⏱️ Temps d'écoute TRANSFR : <span id="timeOnline">0</span> minute(s) = 
+        <span class="points-count" id="userPoints">0</span> / 1000 Points TRANSFR 🪙
+        <div id="pointsMessage" style="font-size: 14px; color: #aaa; margin-top: 5px;">Reste connecté pour gagner 1 point toutes les minutes. Débloque le statut Premium à 1000 points !</div>
+    </div>
+
     <div class="section auth-form" id="registerSection">
         <h2>Créer un compte</h2>
         <form id="registerForm">
             <input type="text" id="regUsername" placeholder="Nom d'utilisateur" required>
             <input type="email" id="regEmail" placeholder="Adresse e-mail" required>
             <input type="password" id="regPassword" placeholder="Mot de passe" required>
-            <div class="checkbox-container">
-                <input type="checkbox" id="regPremium" checked>
-                <label for="regPremium">💎 Demander le statut Créateur Premium</label>
-            </div>
             <button type="submit" class="submit-btn">S'inscrire</button>
         </form>
         <div class="switch-form-link" id="toLoginLink">Déjà un compte ? <span>Se connecter</span></div>
@@ -255,7 +265,7 @@
     <div class="section">
         <h2>🖥️ Serveur de Modération Contextuel TRANSFR</h2>
         <div class="server-log" id="serverLog">
-            [Système] IA de modération en ligne. Mode contextuel activé (Analyse du rythme et du sens).
+            [Système] IA de modération en ligne. Surveillance des points et des fichiers active.
         </div>
     </div>
 
@@ -271,8 +281,8 @@
     </div>
 
     <div class="section" id="creatorSection" style="display: none;">
-        <h2>🌟 Espace Créateur Premium</h2>
-        <p>Notre serveur intelligent analyse si les gros mots font partie du rythme ou s'ils sont méchants !</p>
+        <h2>🌟 Espace Créateur Premium (Débloqué à 1000 Points !)</h2>
+        <p>Tu as atteint les 1000 points ! Tu peux envoyer tes .mp3 ici :</p>
         <form id="uploadForm">
             <input type="text" id="musicTitle" placeholder="Titre de la chanson" required>
             <input type="text" id="musicArtist" placeholder="Ton nom d'artiste" required>
@@ -289,21 +299,18 @@
         <div class="add-manual-box">
             <input type="text" id="adminAddName" placeholder="Nom de la personne">
             <input type="email" id="adminAddEmail" placeholder="Adresse e-mail">
-            <div class="checkbox-container">
-                <input type="checkbox" id="adminAddPremium" checked>
-                <label for="adminAddPremium">Activer le statut ⭐ Premium</label>
-            </div>
             <button type="button" class="submit-btn" id="btnAdminAddManual" style="background-color: #fff; color: #000;">Ajouter au tableau</button>
         </div>
 
-        <h3>2. Liste des utilisateurs</h3>
+        <h3>2. Liste des utilisateurs et de leurs points</h3>
         <table class="admin-table">
             <thead>
                 <tr>
                     <th>Utilisateur</th>
                     <th>Email</th>
+                    <th>Points</th>
                     <th>Statut</th>
-                    <th>Action</th>
+                    <th>Actions Directeur</th>
                 </tr>
             </thead>
             <tbody id="adminUsersTable"></tbody>
@@ -313,14 +320,13 @@
 </div>
 
 <script>
-    // Gros mots surveillés par l'IA
     const insultesGraves = ["fils de pute", "connard", "salope", "pute", "merde"];
+    let currentUser = null;
+    let timerPoints = null;
 
     if (!localStorage.getItem('users')) {
         localStorage.setItem('users', JSON.stringify([]));
     }
-    
-    let currentUser = null;
 
     const registerSection = document.getElementById('registerSection');
     const loginSection = document.getElementById('loginSection');
@@ -329,6 +335,10 @@
     const serverLog = document.getElementById('serverLog');
     const musicGrid = document.getElementById('musicGrid');
     const adminUsersTable = document.getElementById('adminUsersTable');
+    const pointsBox = document.getElementById('pointsBox');
+    const userPointsSpan = document.getElementById('userPoints');
+    const timeOnlineSpan = document.getElementById('timeOnline');
+    const pointsMessage = document.getElementById('pointsMessage');
     
     const loginNavBtn = document.getElementById('loginNavBtn');
     const registerNavBtn = document.getElementById('registerNavBtn');
@@ -346,14 +356,14 @@
         serverLog.scrollTop = serverLog.scrollHeight;
     }
 
-    // Nav
+    // Navigation
     registerNavBtn.addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
     loginNavBtn.addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
     document.getElementById('toLoginLink').addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
     document.getElementById('toRegisterLink').addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
     function closeAllForms() { registerSection.style.display = 'none'; loginSection.style.display = 'none'; }
 
-    // Admin Access
+    // Admin
     adminPanelBtn.addEventListener('click', () => {
         let code = prompt("Code secret Directeur :");
         if (code === "1944") {
@@ -362,54 +372,117 @@
         } else { alert("Code faux !"); }
     });
 
-    // Inscription / Connexion
+    // Inscription (Démarre à 0 points, non premium)
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = document.getElementById('regUsername').value;
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
-        const isPremium = document.getElementById('regPremium').checked;
         let users = JSON.parse(localStorage.getItem('users'));
         if (users.find(u => u.email === email)) { alert("Email déjà pris !"); return; }
-        users.push({ username, email, password, isPremium });
+        
+        users.push({ username, email, password, points: 0, isPremium: false });
         localStorage.setItem('users', JSON.stringify(users));
-        logServeur(`Compte créé : ${username}`);
+        logServeur(`Nouveau membre enregistré : ${username}`);
         this.reset(); closeAllForms(); loginSection.style.display = 'block';
     });
 
+    // Connexion
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         let users = JSON.parse(localStorage.getItem('users'));
         let user = users.find(u => u.email === email && u.password === password);
-        if (user) { currentUser = user; closeAllForms(); updateUI(); } else { alert("Faux !"); }
+        
+        if (user) { 
+            currentUser = user; 
+            closeAllForms(); 
+            updateUI(); 
+            demarrerCompteurPoints();
+            logServeur(`${currentUser.username} s'est connecté. Compteur de points démarré.`);
+        } else { alert("Faux !"); }
     });
 
-    logoutNavBtn.addEventListener('click', () => { currentUser = null; updateUI(); });
+    // Déconnexion
+    logoutNavBtn.addEventListener('click', () => {
+        clearInterval(timerPoints);
+        logServeur(`${currentUser.username} s'est déconnecté. Arrêt du compteur.`);
+        currentUser = null;
+        updateUI();
+    });
 
-    // Ajouter manuellement dans les cases de texte avec le clavier
+    // AJOUTER MANUELLEMENT UN MEMBRE DEPUIS L'ADMIN
     document.getElementById('btnAdminAddManual').addEventListener('click', function() {
         const nameInput = document.getElementById('adminAddName');
         const emailInput = document.getElementById('adminAddEmail');
-        const isPremium = document.getElementById('adminAddPremium').checked;
         if (nameInput.value === "" || emailInput.value === "") { alert("Remplis les cases !"); return; }
         let users = JSON.parse(localStorage.getItem('users'));
-        users.push({ username: nameInput.value, email: emailInput.value, password: "123", isPremium });
+        users.push({ username: nameInput.value, email: emailInput.value, password: "123", points: 0, isPremium: false });
         localStorage.setItem('users', JSON.stringify(users));
         logServeur(`[Admin] Ajout manuel de : ${nameInput.value}`, "success");
         nameInput.value = ""; emailInput.value = "";
         updateAdminPanel(); updateUI();
     });
 
+    // COMPTEUR DE POINTS INTELLIGENT (1 minute = 1 point)
+    function demarrerCompteurPoints() {
+        clearInterval(timerPoints);
+        
+        // Mettre à jour l'affichage au démarrage
+        userPointsSpan.textContent = currentUser.points;
+        timeOnlineSpan.textContent = currentUser.points; // Vu que 1 point = 1 minute
+
+        // Lance une boucle toutes les 60 secondes (60000 millisecondes)
+        timerPoints = setInterval(() => {
+            if (currentUser && !currentUser.isPremium) {
+                currentUser.points += 1;
+                
+                // Sauvegarder dans la liste générale
+                let users = JSON.parse(localStorage.getItem('users'));
+                let u = users.find(user => user.email === currentUser.email);
+                if (u) {
+                    u.points = currentUser.points;
+                    
+                    // VÉRIFICATION AUTOMATIQUE DU SEUIL DE 1000 POINTS !
+                    if (u.points >= 1000) {
+                        u.isPremium = true;
+                        currentUser.isPremium = true;
+                        logServeur(`🏆 [PREMIUM DÉBLOQUÉ] ${currentUser.username} a atteint 1000 points d'écoute !`, "success");
+                        alert("Félicitations 🎉 ! Tu as accumulé 1000 points sur TRANSFR ! Tu es désormais membre Premium et tu as accès à l'Espace Créateur !");
+                    }
+                    
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+
+                // Mettre à jour l'écran
+                userPointsSpan.textContent = currentUser.points;
+                timeOnlineSpan.textContent = currentUser.points;
+                updateUI();
+            }
+        }, 60000); 
+    }
+
     function updateUI() {
         if (currentUser) {
             loginNavBtn.style.display = 'none'; registerNavBtn.style.display = 'none'; logoutNavBtn.style.display = 'block';
-            if (currentUser.isPremium) { headerUserStatus.textContent = currentUser.username + " (⭐ Premium)"; creatorSection.style.display = 'block'; }
-            else { headerUserStatus.textContent = currentUser.username + " (Membre)"; creatorSection.style.display = 'none'; }
+            pointsBox.style.display = 'block';
+            userPointsSpan.textContent = currentUser.points;
+            timeOnlineSpan.textContent = currentUser.points;
+
+            if (currentUser.isPremium) {
+                headerUserStatus.textContent = currentUser.username + " (⭐ Premium)";
+                creatorSection.style.display = 'block';
+                pointsMessage.innerHTML = "🏆 <span style='color:var(--primary-color); font-weight:bold;'>Statut Premium Activé !</span> Tu as atteint l'objectif des 1000 points.";
+            } else {
+                headerUserStatus.textContent = currentUser.username + " (Membre)";
+                creatorSection.style.display = 'none';
+                pointsMessage.textContent = "Reste connecté pour gagner 1 point toutes les minutes. Débloque le statut Premium à 1000 points !";
+            }
         } else {
             loginNavBtn.style.display = 'block'; registerNavBtn.style.display = 'block'; logoutNavBtn.style.display = 'none';
             headerUserStatus.textContent = "Visiteur"; creatorSection.style.display = 'none';
+            pointsBox.style.display = 'none';
         }
         updateAdminPanel();
     }
@@ -419,24 +492,54 @@
         adminUsersTable.innerHTML = '';
         users.forEach((u) => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${u.username}</strong></td><td>${u.email}</td><td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
-            <td><button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Changer</button></td>`;
+            tr.innerHTML = `
+                <td><strong>${u.username}</strong></td>
+                <td>${u.email}</td>
+                <td><span style="color:var(--primary-color); font-weight:bold;">${u.points} pts</span></td>
+                <td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
+                <td>
+                    <button class="action-mini-btn cheat-btn" onclick="ajouterPointsCheat('${u.email}')">+500 pts (Triche Directeur)</button>
+                    <button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Forcer Statut</button>
+                </td>
+            `;
             adminUsersTable.appendChild(tr);
         });
     }
+
+    // Bouton de triche exclusif pour toi (Le Directeur) pour tester sans attendre 1000 minutes !
+    window.ajouterPointsCheat = function(email) {
+        let users = JSON.parse(localStorage.getItem('users'));
+        let u = users.find(user => user.email === email);
+        if (u) {
+            u.points += 500;
+            if (u.points >= 1000) { u.isPremium = true; }
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            if (currentUser && currentUser.email === email) { 
+                currentUser.points = u.points;
+                currentUser.isPremium = u.isPremium;
+                if(currentUser.isPremium) {
+                    alert("Triche Admin : Tu t'es ajouté 500 points. Tu as dépassé les 1000 points et débloqué le Premium !");
+                }
+            }
+            logServeur(`[Admin] Le Directeur a donné +500 points à ${u.username}`);
+            updateUI();
+        }
+    };
 
     window.toggleUserPremium = function(email) {
         let users = JSON.parse(localStorage.getItem('users'));
         let u = users.find(user => user.email === email);
         if (u) {
             u.isPremium = !u.isPremium;
+            if (u.isPremium && u.points < 1000) { u.points = 1000; } // Ajuste les points s'il est forcé premium
             localStorage.setItem('users', JSON.stringify(users));
-            if (currentUser && currentUser.email === email) { currentUser.isPremium = u.isPremium; }
+            if (currentUser && currentUser.email === email) { currentUser.isPremium = u.isPremium; currentUser.points = u.points; }
             updateUI();
         }
     };
 
-    // LA MODÉRATION INTELLIGENTE CONTEXTUELLE
+    // MODÉRATION INTELLIGENTE CONTEXTUELLE
     document.getElementById('uploadForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const title = document.getElementById('musicTitle').value;
@@ -448,36 +551,25 @@
         if (!file) return;
 
         logServeur(`Analyse contextuelle du morceau de ${currentUser.username}...`);
-
         let texteTitreEtArtiste = (title + " " + artist).toLowerCase();
-        
-        // 1. Est-ce qu'il y a un gros mot dans le Titre ou l'Artiste ? (Interdit !)
         let grosMotDansTitre = insultesGraves.some(word => texteTitreEtArtiste.includes(word));
-        
-        // 2. Est-ce qu'il y a un gros mot dans l'explication/paroles ?
         let grosMotDansParoles = insultesGraves.some(word => context.includes(word));
-
-        // 3. Est-ce que l'utilisateur a précisé que c'est pour le rythme/style ?
         let pourLeRythme = context.includes("rythme") || context.includes("rap") || context.includes("style") || context.includes("sens");
 
         setTimeout(() => {
             if (grosMotDansTitre) {
-                // Refus immédiat si c'est affiché publiquement sur le titre
                 logServeur(`[REFUSÉ] Gros mot détecté directement dans le TITRE ou l'ARTISTE.`, "error");
                 alert("Le serveur a refusé : Pas de gros mots visibles dans le titre !");
             } 
             else if (grosMotDansParoles && !pourLeRythme) {
-                // Refus s'il y a un gros mot mais pas d'explication artistique (attaque gratuite)
                 logServeur(`[REFUSÉ] Insulte détectée sans contexte artistique approprié.`, "error");
                 alert("Le serveur a détecté une insulte gratuite non justifiée par le rythme.");
             }
             else if (grosMotDansParoles && pourLeRythme) {
-                // Validation acceptée car c'est dans le rythme de la musique !
                 logServeur(`[APPROUVÉ - RYTHME] Gros mot détecté mais validé : Utilisé artistiquement dans le rythme.`, "warning");
                 publierMusique(title, artist, file);
             }
             else {
-                // Tout est parfaitement propre
                 logServeur(`[APPROUVÉ] Morceau parfaitement conforme et sécurisé.`, "success");
                 publierMusique(title, artist, file);
             }
