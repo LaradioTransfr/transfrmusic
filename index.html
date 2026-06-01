@@ -2,215 +2,119 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfr Music - L'application Spotify Libre</title>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <title>TRANSFR MUSIC</title>
     <style>
-        body { background-color: #040404; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #282828; padding-bottom: 20px; margin-bottom: 20px; }
-        .logo { color: #1db954; font-size: 28px; font-weight: bold; letter-spacing: -1px; }
-        .badge-premium { background: linear-gradient(45deg, #ffa502, #ff7f50); color: black; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; }
-        .grid-musiques { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .carte-musique { background: #121212; padding: 15px; border-radius: 8px; border: 1px solid #282828; transition: background 0.3s; cursor: pointer; text-align: center; }
-        .carte-musique:hover { background: #1c1c1c; }
-        .carte-musique img { width: 100%; height: 120px; border-radius: 6px; object-fit: cover; margin-bottom: 10px; }
-        .btn-play { background: #1db954; color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 25px; cursor: pointer; margin-top: 5px; }
-        .zone-premium-action { background: #121212; border: 2px dashed #ffa502; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .btn-premium { background: linear-gradient(45deg, #ffa502, #ff7f50); color: black; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        .lecteur-bas { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #282828; padding: 15px; display: flex; justify-content: center; align-items: center; }
-        .admin-box { background: #141423; border: 2px solid #00d2ff; padding: 20px; border-radius: 12px; margin-top: 30px; }
-        .btn-accept { background: #2ed573; color: white; border: none; padding: 6px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-reject { background: #ff4757; color: white; border: none; padding: 6px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #1ed760;
+            color: #000;
+        }
+        .logo { font-size: 24px; font-weight: bold; }
+        .btn {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .container { padding: 20px; }
+        .section {
+            background-color: #242424;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .music-grid {
+            display: flex;
+            gap: 20px;
+        }
+        .music-card {
+            background-color: #181818;
+            padding: 15px;
+            border-radius: 8px;
+            width: 150px;
+            text-align: center;
+        }
+        input, select, button {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button.action-btn { background-color: #1ed760; color: #000; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <div class="logo">🎵 TRANSFR MUSIC</div>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span id="statut-compte" style="color: #aaa; font-weight: bold;">Statut : Gratuit</span>
-                <button id="btn-devenir-premium" onclick="devenirPremiumGratuit()" class="btn-premium">🚀 Devenir Premium (Gratuit)</button>
-                <span onclick="ouvrirAdmin()" style="color: #333; font-size: 11px; cursor: pointer;">[Admin]</span>
-            </div>
-        </div>
-
-        <h3>🌍 Les Titres Disponibles</h3>
-        <div class="grid-musiques" id="bibliotheque-musiques">
-            <div class="carte-musique">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200">
-                <div><strong>Chill Day</strong></div>
-                <div style="color: #aaa; font-size: 13px; margin-bottom: 5px;">LAKEY INSPIRED</div>
-                <button class="btn-play" onclick="chargerMusique('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'Chill Day')">▶️ Écouter</button>
-            </div>
-            <div class="carte-musique">
-                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200">
-                <div><strong>Higher</strong></div>
-                <div style="color: #aaa; font-size: 13px; margin-bottom: 5px;">Tobu</div>
-                <button class="btn-play" onclick="chargerMusique('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'Higher')">▶️ Écouter</button>
-            </div>
-        </div>
-
-        <div class="zone-premium-action" id="zone-premium-upload" style="display: none;">
-            <h3 style="color: #ffa502; margin-top: 0;">🎹 ESPACE CRÉATEUR PREMIUM</h3>
-            <p style="font-size: 14px; color: #ccc;">Envoie un fichier audio .mp3 pour qu'il passe dans le serveur de validation du Directeur !</p>
-            <div style="display: flex; flex-direction: column; gap: 10px; max-width: 400px;">
-                <input type="text" id="crea-titre" placeholder="Titre de ta chanson..." style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 6px;">
-                <input type="text" id="crea-artiste" placeholder="Ton nom d'artiste..." style="padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 6px;">
-                <input type="file" id="crea-fichier" accept="audio/mp3" style="color: #aaa;">
-                <button onclick="envoyerAuServeurValidation()" style="background: #1db954; color: black; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer;">📤 Envoyer la musique au Directeur</button>
-            </div>
-        </div>
-
-        <div class="admin-box" id="zone-admin-validation" style="display: none;">
-            <h3 style="color: #00d2ff; margin-top: 0;">👑 SERVEUR DE VALIDATION DU DIRECTEUR</h3>
-            <p style="font-size: 12px; color: #aaa;">Voici les musiques envoyées par les membres Premium. Valide-les pour les ajouter au Spotify public !</p>
-            <div id="liste-attente-validation" style="display: flex; flex-direction: column; gap: 10px;">
-                <p style="color: #555; font-style: italic;">Aucune musique en attente de validation...</p>
-            </div>
-        </div>
-
+<header>
+    <div class="logo">♪ TRANSFR MUSIC</div>
+    <div>
+        <button class="btn" id="loginBtn">Se connecter</button>
+        <button class="btn" id="registerBtn">Créer un compte</button>
     </div>
+</header>
 
-    <div class="lecteur-bas">
-        <div style="display: flex; align-items: center; gap: 15px; width: 100%; max-width: 800px;">
-            <div style="flex: 1;"><strong id="titre-en-cours">Aucun morceau sélectionné</strong></div>
-            <audio id="lecteur-audio-principal" controls style="flex: 2; height: 32px;"></audio>
+<div class="container">
+
+    <div class="section">
+        <h2>Les Titres Disponibles</h2>
+        <div class="music-grid">
+            <div class="music-card">
+                <p>Chill Day</p>
+                <button class="action-btn">Écouter</button>
+            </div>
+            <div class="music-card">
+                <p>Higher</p>
+                <button class="action-btn">Écouter</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        let estPremium = false;
-        let listeValidationLocale = [];
-        let peerServeur = null;
-        
-        // Simuler le passage en Premium gratuitement pour s'amuser
-        function devenirPremiumGratuit() {
-            estPremium = true;
-            document.getElementById('statut-compte').innerHTML = '<span class="badge-premium">👑 Membre Premium</span>';
-            document.getElementById('btn-devenir-premium').style.display = 'none';
-            document.getElementById('zone-premium-upload').style.display = 'block';
-            alert("🚀 Félicitations ! Tu es maintenant membre Premium Transfr Music !");
+    <div class="section">
+        <h2>Espace Créateur Premium</h2>
+        <p>Envoyer un fichier audio MP3</p>
+        <input type="text" placeholder="Titre de la chanson">
+        <input type="text" placeholder="Ton nom d'artiste">
+        <input type="file" accept=".mp3">
+        <button class="action-btn">Envoyer la musique</button>
+    </div>
+
+    <div class="section" id="adminSection" style="display:none;">
+        <h2>Serveur de validation du Directeur</h2>
+        <p>Aucune musique en attente de validation...</p>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('registerBtn').addEventListener('click', function() {
+        alert("Formulaire d'inscription à implémenter ici.");
+    });
+    
+    document.getElementById('loginBtn').addEventListener('click', function() {
+        let code = prompt("Entrez le code secret Directeur (pour tester l'admin) :");
+        if (code === "1944") {
+            document.getElementById('adminSection').style.display = 'block';
+            alert("Accès Administrateur autorisé.");
+        } else {
+            alert("Code invalide.");
         }
+    });
+</script>
 
-        // Lancer la lecture d'une chanson
-        function chargerMusique(url, titre) {
-            document.getElementById('titre-en-cours').innerText = "🎵 " + titre;
-            let audio = document.getElementById('lecteur-audio-principal');
-            audio.src = url;
-            audio.play();
-        }
-
-        // Envoyer le morceau vers le serveur (stocké localement pour la démo ou transmis)
-        function envoyerAuServeurValidation() {
-            let titre = document.getElementById('crea-titre').value.trim();
-            let artiste = document.getElementById('crea-artiste').value.trim();
-            let fichierInput = document.getElementById('crea-fichier');
-
-            if(!titre || !artiste || !fichierInput.files[0]) {
-                return alert("❌ Remplis toutes les cases et choisis un fichier .mp3 !");
-            }
-
-            let file = fichierInput.files[0];
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let musiqueObjet = {
-                    id: Date.now(),
-                    titre: titre,
-                    artiste: artiste,
-                    url: e.target.result // Convertit le fichier audio en texte pour le code
-                };
-
-                // Sauvegarde temporaire dans la liste d'attente
-                let attente = JSON.parse(localStorage.getItem('transfr-music-attente') || '[]');
-                attente.push(musiqueObjet);
-                localStorage.setItem('transfr-music-attente', JSON.stringify(attente));
-
-                alert("📡 Envoyé ! Ta musique est dans le serveur de validation du Directeur.");
-                document.getElementById('crea-titre').value = "";
-                document.getElementById('crea-artiste').value = "";
-                fichierInput.value = "";
-                rafraichirValidationAdmin();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Ouvrir la zone d'administration secrète
-        function ouvrirAdmin() {
-            let code = prompt("Entrez le Code Secret Directeur :");
-            if(code === "1944") {
-                document.getElementById('zone-admin-validation').style.display = 'block';
-                rafraichirValidationAdmin();
-            } else {
-                alert("Code incorrect !");
-            }
-        }
-
-        // Mettre à jour l'écran de contrôle du Directeur
-        function rafraichirValidationAdmin() {
-            let conteneur = document.getElementById('liste-attente-validation');
-            let attente = JSON.parse(localStorage.getItem('transfr-music-attente') || '[]');
-            conteneur.innerHTML = "";
-
-            if(attente.length === 0) {
-                conteneur.innerHTML = "<p style='color: #555; font-style: italic;'>Aucune musique en attente de validation...</p>";
-                return;
-            }
-
-            attente.forEach(m => {
-                let div = document.createElement('div');
-                div.style.background = "#222";
-                div.style.padding = "10px";
-                div.style.borderRadius = "6px";
-                div.style.display = "flex";
-                div.style.justify = "space-between";
-                div.style.alignItems = "center";
-                
-                div.innerHTML = `
-                    <div><strong>${m.titre}</strong> par <em>${m.artiste}</em></div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-play" style="padding:4px 10px; font-size:11px;" onclick="chargerMusique('${m.url}', '${m.titre}')">🎧 Écouter</button>
-                        <button class="btn-accept" onclick="actionDirecteur(${m.id}, true)">🟢 Accepter</button>
-                        <button class="btn-reject" onclick="actionDirecteur(${m.id}, false)">🔴 Refuser</button>
-                    </div>
-                `;
-                conteneur.appendChild(div);
-            });
-        }
-
-        // Action du Directeur : Valider ou Refuser la musique
-        function actionDirecteur(id, estAccepte) {
-            let attente = JSON.parse(localStorage.getItem('transfr-music-attente') || '[]');
-            let musiqueTrouvee = attente.find(m => m.id === id);
-
-            if(estAccepte && musiqueTrouvee) {
-                // On ajoute sur le Spotify public (dans l'affichage)
-                ajouterMusiqueALaBibliotheque(musiqueTrouvee);
-                alert("🟢 Chanson acceptée ! Elle est ajoutée à la playlist publique.");
-            } else {
-                alert("🔴 Chanson refusée et supprimée du serveur.");
-            }
-
-            // On retire de la liste d'attente
-            attente = attente.filter(m => m.id !== id);
-            localStorage.setItem('transfr-music-attente', JSON.stringify(attente));
-            rafraichirValidationAdmin();
-        }
-
-        // Ajouter la musique validée sur l'écran
-        function ajouterMusiqueALaBibliotheque(m) {
-            let biblio = document.getElementById('bibliotheque-musiques');
-            let nouvelleCarte = document.createElement('div');
-            nouvelleCarte.className = "carte-musique";
-            nouvelleCarte.innerHTML = `
-                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200">
-                <div><strong>${m.titre}</strong></div>
-                <div style="color: #aaa; font-size: 13px; margin-bottom: 5px;">${m.artiste}</div>
-                <button class="btn-play" onclick="chargerMusique('${m.url}', '${m.titre}')">▶️ Écouter</button>
-            `;
-            biblio.appendChild(nouvelleCarte);
-        }
-    </script>
 </body>
 </html>
