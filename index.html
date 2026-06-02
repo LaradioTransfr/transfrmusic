@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRANSFR MUSIC</title>
+    <title>TRANSFR MUSIC - Les Titres</title>
     <style>
         :root {
             --primary-color: #1ed760;
@@ -12,582 +12,194 @@
             --bg-section: #242424;
             --text-color: #ffffff;
         }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark); color: var(--text-color);
+            margin: 0; padding: 0;
         }
-
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: var(--primary-color);
-            color: #000000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 30px; background-color: var(--primary-color); color: #000;
         }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
+        .logo { font-size: 24px; font-weight: bold; }
         .btn {
-            background-color: #000000;
-            color: #ffffff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s, background-color 0.2s;
+            background-color: #000; color: #fff; padding: 10px 20px;
+            border: none; border-radius: 20px; cursor: pointer; font-weight: bold; text-decoration: none;
         }
-
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-        .btn-admin {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .user-status {
-            font-weight: bold;
-            margin-right: 10px;
-            color: #000000;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .section {
-            background-color: var(--bg-section);
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        h2 {
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 8px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background-color: #333;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 80px;
-            font-family: inherit;
-        }
-
-        /* Barre des tâches des Points TRANSFR MUSIC */
-        .points-box {
-            background-color: #181818;
-            border: 2px solid var(--primary-color);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .points-count {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 24px;
-        }
-
-        .music-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .music-card {
-            background-color: var(--bg-card);
-            padding: 15px;
-            border-radius: 8px;
-            width: 240px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .music-card p {
-            margin: 5px 0;
-            font-weight: bold;
-            word-wrap: break-word;
-        }
-
-        .music-card .artist {
-            font-size: 14px;
-            color: #b3b3b3;
-            margin-bottom: 10px;
-            word-wrap: break-word;
-        }
-
-        audio {
-            width: 100%;
-            margin-top: auto;
-            border-radius: 4px;
-        }
-
-        .server-log {
-            background-color: #000;
-            color: #00ff00;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
-            border-radius: 6px;
-            max-height: 120px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .admin-table th, .admin-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #444;
-        }
-
-        .admin-table th {
-            background-color: #181818;
-            color: var(--primary-color);
-        }
-
-        .action-mini-btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .premium-toggle-btn { background-color: #f1c40f; color: black; }
-        .cheat-btn { background-color: #3498db; color: white; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .section { background-color: var(--bg-section); padding: 25px; margin-bottom: 25px; border-radius: 12px; }
+        h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-top: 0; }
         
-        .add-manual-box {
-            background-color: #1c1c1c;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border: 1px dashed var(--primary-color);
+        .music-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; }
+        .music-card {
+            background-color: var(--bg-card); padding: 15px; border-radius: 8px;
+            width: 240px; text-align: center; box-sizing: border-box;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-
+        .music-card p { margin: 5px 0; font-weight: bold; }
+        .music-card .artist { font-size: 14px; color: #b3b3b3; margin-bottom: 10px; }
+        audio { width: 100%; border-radius: 4px; }
+        
+        input, textarea {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px;
+            border: 1px solid #444; background-color: #333; color: white; box-sizing: border-box;
+        }
         .submit-btn {
-            background-color: var(--primary-color);
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            width: 100%;
-            margin-top: 10px;
+            background-color: var(--primary-color); color: #000; font-weight: bold;
+            cursor: pointer; border: none; padding: 12px; border-radius: 6px; width: 100%;
         }
-
-        .auth-form { display: none; max-width: 400px; margin: 0 auto; }
-        .switch-form-link { text-align: center; margin-top: 15px; font-size: 14px; color: #aaa; cursor: pointer; }
-        .switch-form-link span { color: var(--primary-color); text-decoration: underline; }
+        .server-log {
+            background-color: #000; color: #00ff00; font-family: monospace;
+            padding: 10px; border-radius: 6px; max-height: 100px; overflow-y: auto; font-size: 13px;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">♪ TRANSFR MUSIC</div>
-    <div class="nav-buttons">
-        <span class="user-status" id="headerUserStatus">Visiteur</span>
-        <button class="btn btn-admin" id="adminPanelBtn">🔑 Zone Admin</button>
-        <button class="btn" id="loginNavBtn">Se connecter</button>
-        <button class="btn" id="registerNavBtn">Créer un compte</button>
-        <button class="btn btn-danger" id="logoutNavBtn" style="display: none;">Déconnexion</button>
+    <div class="logo">♪ TRANSFR MUSIC - Titres</div>
+    <div>
+        <span id="userStatusLabel" style="font-weight: bold; margin-right: 15px;"></span>
+        <a href="transfr.html" class="btn">🏠 Retour à l'Accueil</a>
     </div>
 </header>
 
 <div class="container">
 
-    <div class="section points-box" id="pointsBox" style="display: none;">
-        ⏱️ Temps d'écoute TRANSFR MUSIC : <span id="timeOnline">0</span> minute(s) = 
-        <span class="points-count" id="userPoints">0</span> / 1000 Points TRANSFR 🪙
-        <div id="pointsMessage" style="font-size: 14px; color: #aaa; margin-top: 5px;">Reste connecté pour gagner 1 point toutes les minutes. Débloque le statut Premium à 1000 points !</div>
-    </div>
-
-    <div class="section auth-form" id="registerSection">
-        <h2>Créer un compte</h2>
-        <form id="registerForm">
-            <input type="text" id="regUsername" placeholder="Nom d'utilisateur" required>
-            <input type="email" id="regEmail" placeholder="Adresse e-mail" required>
-            <input type="password" id="regPassword" placeholder="Mot de passe" required>
-            <button type="submit" class="submit-btn">S'inscrire</button>
-        </form>
-        <div class="switch-form-link" id="toLoginLink">Déjà un compte ? <span>Se connecter</span></div>
-    </div>
-
-    <div class="section auth-form" id="loginSection">
-        <h2>Se connecter</h2>
-        <form id="loginForm">
-            <input type="email" id="loginEmail" placeholder="Adresse e-mail" required>
-            <input type="password" id="loginPassword" placeholder="Mot de passe" required>
-            <button type="submit" class="submit-btn">Connexion</button>
-        </form>
-        <div class="switch-form-link" id="toRegisterLink">Pas encore de compte ? <span>Créer un compte</span></div>
-    </div>
-
-    <div class="section">
-        <h2>🖥️ Serveur de Modération Contextuel TRANSFR MUSIC</h2>
-        <div class="server-log" id="serverLog">
-            [Système] IA de modération TRANSFR MUSIC en ligne. Surveillance active.
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>Les Titres Disponibles</h2>
-        <div class="music-grid" id="musicGrid">
-            <div class="music-card">
-                <p>Chill Day</p>
-                <div class="artist">LAKEY INSPIRED</div>
-                <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-            </div>
-        </div>
-    </div>
-
     <div class="section" id="creatorSection" style="display: none;">
-        <h2>🌟 Espace Créateur Premium (Débloqué à 1000 Points !)</h2>
-        <p>Tu as atteint les 1000 points TRANSFR MUSIC ! Tu peux envoyer tes .mp3 ici :</p>
+        <h2>🌟 Publier sur le Serveur Mondial TRANSFR</h2>
+        <p>En tant que membre Premium, ta musique sera envoyée en ligne et écoutable par tout le monde !</p>
         <form id="uploadForm">
             <input type="text" id="musicTitle" placeholder="Titre de la chanson" required>
             <input type="text" id="musicArtist" placeholder="Ton nom d'artiste" required>
-            <textarea id="musicContext" placeholder="Paroles ou style de musique (Ex: 'C'est du rap, le gros mot est dans le rythme')" required></textarea>
-            <input type="file" id="musicFile" accept="audio/mp3, audio/*" required>
-            <button type="submit" class="submit-btn">Envoyer au serveur intelligent</button>
+            <textarea id="musicContext" placeholder="Paroles ou style de musique" required></textarea>
+            <input type="text" id="musicUrl" placeholder="Lien URL de ton fichier .mp3 (Ex: https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3)" required>
+            <button type="submit" class="submit-btn">Envoyer à la Base de Données Globale</button>
         </form>
     </div>
 
-    <div class="section" id="adminSection" style="display: none;">
-        <h2>🛠️ Panneau de Contrôle du Directeur</h2>
-        
-        <h3>1. Ajouter un membre avec le clavier</h3>
-        <div class="add-manual-box">
-            <input type="text" id="adminAddName" placeholder="Nom de la personne">
-            <input type="email" id="adminAddEmail" placeholder="Adresse e-mail">
-            <button type="button" class="submit-btn" id="btnAdminAddManual" style="background-color: #fff; color: #000;">Ajouter au tableau</button>
-        </div>
-
-        <h3>2. Liste des utilisateurs et de leurs points</h3>
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Utilisateur</th>
-                    <th>Email</th>
-                    <th>Points</th>
-                    <th>Statut</th>
-                    <th>Actions Directeur</th>
-                </tr>
-            </thead>
-            <tbody id="adminUsersTable"></tbody>
-        </table>
+    <div class="section">
+        <h2>🎵 Titres du Nuage TRANSFR MUSIC</h2>
+        <div class="music-log server-log" id="statusLog">[Système] Connexion au nuage en cours...</div>
+        <div class="music-grid" id="musicGrid">
+            </div>
     </div>
 
 </div>
 
 <script>
+    // ⚠️ METS TES DEUX CLÉS SUPABASE ICI POUR ACTIVER LE SERVEUR MONDIAL !
+    const SUPABASE_URL = "METS_TON_URL_SUPABASE_ICI"; 
+    const SUPABASE_KEY = "METS_TA_CLE_ANON_SUPABASE_ICI";
+
     const insultesGraves = ["fils de pute", "connard", "salope", "pute", "merde"];
-    let currentUser = null;
-    let timerPoints = null;
-
-    if (!localStorage.getItem('users')) {
-        localStorage.setItem('users', JSON.stringify([]));
-    }
-
-    const registerSection = document.getElementById('registerSection');
-    const loginSection = document.getElementById('loginSection');
-    const creatorSection = document.getElementById('creatorSection');
-    const adminSection = document.getElementById('adminSection');
-    const serverLog = document.getElementById('serverLog');
     const musicGrid = document.getElementById('musicGrid');
-    const adminUsersTable = document.getElementById('adminUsersTable');
-    const pointsBox = document.getElementById('pointsBox');
-    const userPointsSpan = document.getElementById('userPoints');
-    const timeOnlineSpan = document.getElementById('timeOnline');
-    const pointsMessage = document.getElementById('pointsMessage');
-    
-    const loginNavBtn = document.getElementById('loginNavBtn');
-    const registerNavBtn = document.getElementById('registerNavBtn');
-    const logoutNavBtn = document.getElementById('logoutNavBtn');
-    const adminPanelBtn = document.getElementById('adminPanelBtn');
-    const headerUserStatus = document.getElementById('headerUserStatus');
+    const statusLog = document.getElementById('statusLog');
+    const creatorSection = document.getElementById('creatorSection');
+    const userStatusLabel = document.getElementById('userStatusLabel');
 
-    function logServeur(msg, type = "info") {
-        const time = new Date().toLocaleTimeString();
-        let color = "#00ff00";
-        if (type === "error") color = "#ff4d4d";
-        if (type === "success") color = "#1ed760";
-        if (type === "warning") color = "#f1c40f";
-        serverLog.innerHTML += `<br><span style="color:${color}">[${time}] ${msg}</span>`;
-        serverLog.scrollTop = serverLog.scrollHeight;
+    // Récupérer l'utilisateur connecté depuis l'accueil
+    let currentUser = JSON.parse(localStorage.getItem('session_user')) || null;
+
+    if (currentUser) {
+        userStatusLabel.textContent = currentUser.username + (currentUser.isPremium ? " ⭐" : " (Normal)");
+        if (currentUser.isPremium) creatorSection.style.display = 'block';
+    } else {
+        userStatusLabel.textContent = "Visiteur déconnecté";
     }
 
-    // Navigation
-    registerNavBtn.addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
-    loginNavBtn.addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
-    document.getElementById('toLoginLink').addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
-    document.getElementById('toRegisterLink').addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
-    function closeAllForms() { registerSection.style.display = 'none'; loginSection.style.display = 'none'; }
+    function logStatus(msg) {
+        statusLog.textContent = `[Nuage] ${msg}`;
+    }
 
-    // Admin
-    adminPanelBtn.addEventListener('click', () => {
-        let code = prompt("Code secret Directeur :");
-        if (code === "1944") {
-            adminSection.style.display = adminSection.style.display === 'none' ? 'block' : 'none';
-            updateAdminPanel();
-        } else { alert("Code faux !"); }
-    });
+    // CHARGER LES MUSIQUES DEPUIS LE SERVEUR GLOBAL SUPABASE
+    async function chargerMusiquesMondiales() {
+        if (SUPABASE_URL.includes("METS_TON_URL")) {
+            logStatus("Serveur en mode local. Connecte ton Supabase pour partager avec d'autres appareils !");
+            return;
+        }
 
-    // Inscription
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('regUsername').value;
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        let users = JSON.parse(localStorage.getItem('users'));
-        if (users.find(u => u.email === email)) { alert("Email déjà pris !"); return; }
-        
-        users.push({ username, email, password, points: 0, isPremium: false });
-        localStorage.setItem('users', JSON.stringify(users));
-        logServeur(`Nouveau membre enregistré : ${username}`);
-        this.reset(); closeAllForms(); loginSection.style.display = 'block';
-    });
-
-    // Connexion
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        let users = JSON.parse(localStorage.getItem('users'));
-        let user = users.find(u => u.email === email && u.password === password);
-        
-        if (user) { 
-            currentUser = user; 
-            closeAllForms(); 
-            updateUI(); 
-            demarrerCompteurPoints();
-            logServeur(`${currentUser.username} s'est connecté à TRANSFR MUSIC.`);
-        } else { alert("Faux !"); }
-    });
-
-    // Déconnexion
-    logoutNavBtn.addEventListener('click', () => {
-        clearInterval(timerPoints);
-        logServeur(`${currentUser.username} s'est déconnecté.`);
-        currentUser = null;
-        updateUI();
-    });
-
-    // Ajouter manuellement un membre
-    document.getElementById('btnAdminAddManual').addEventListener('click', function() {
-        const nameInput = document.getElementById('adminAddName');
-        const emailInput = document.getElementById('adminAddEmail');
-        if (nameInput.value === "" || emailInput.value === "") { alert("Remplis les cases !"); return; }
-        let users = JSON.parse(localStorage.getItem('users'));
-        users.push({ username: nameInput.value, email: emailInput.value, password: "123", points: 0, isPremium: false });
-        localStorage.setItem('users', JSON.stringify(users));
-        logServeur(`[Admin] Ajout manuel de : ${nameInput.value}`, "success");
-        nameInput.value = ""; emailInput.value = "";
-        updateAdminPanel(); updateUI();
-    });
-
-    // Compteur de points (1 minute = 1 point)
-    function demarrerCompteurPoints() {
-        clearInterval(timerPoints);
-        userPointsSpan.textContent = currentUser.points;
-        timeOnlineSpan.textContent = currentUser.points;
-
-        timerPoints = setInterval(() => {
-            if (currentUser && !currentUser.isPremium) {
-                currentUser.points += 1;
-                
-                let users = JSON.parse(localStorage.getItem('users'));
-                let u = users.find(user => user.email === currentUser.email);
-                if (u) {
-                    u.points = currentUser.points;
-                    
-                    if (u.points >= 1000) {
-                        u.isPremium = true;
-                        currentUser.isPremium = true;
-                        logServeur(`🏆 [PREMIUM DÉBLOQUÉ] ${currentUser.username} a obtenu le statut Premium TRANSFR MUSIC !`, "success");
-                        alert("Félicitations 🎉 ! Tu as accumulé 1000 points sur TRANSFR MUSIC ! Tu es désormais membre Premium !");
-                    }
-                    localStorage.setItem('users', JSON.stringify(users));
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/musiques?select=*`, {
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`
                 }
-
-                userPointsSpan.textContent = currentUser.points;
-                timeOnlineSpan.textContent = currentUser.points;
-                updateUI();
-            }
-        }, 60000); 
-    }
-
-    function updateUI() {
-        if (currentUser) {
-            loginNavBtn.style.display = 'none'; registerNavBtn.style.display = 'none'; logoutNavBtn.style.display = 'block';
-            pointsBox.style.display = 'block';
-            userPointsSpan.textContent = currentUser.points;
-            timeOnlineSpan.textContent = currentUser.points;
-
-            if (currentUser.isPremium) {
-                headerUserStatus.textContent = currentUser.username + " (⭐ Premium)";
-                creatorSection.style.display = 'block';
-                pointsMessage.innerHTML = "🏆 <span style='color:var(--primary-color); font-weight:bold;'>Statut Premium Activé !</span> Objectif des 1000 points atteint.";
-            } else {
-                headerUserStatus.textContent = currentUser.username + " (Membre)";
-                creatorSection.style.display = 'none';
-                pointsMessage.textContent = "Reste connecté pour gagner 1 point toutes les minutes. Débloque le statut Premium à 1000 points !";
-            }
-        } else {
-            loginNavBtn.style.display = 'block'; registerNavBtn.style.display = 'block'; logoutNavBtn.style.display = 'none';
-            headerUserStatus.textContent = "Visiteur"; creatorSection.style.display = 'none';
-            pointsBox.style.display = 'none';
-        }
-        updateAdminPanel();
-    }
-
-    function updateAdminPanel() {
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        adminUsersTable.innerHTML = '';
-        users.forEach((u) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${u.username}</strong></td>
-                <td>${u.email}</td>
-                <td><span style="color:var(--primary-color); font-weight:bold;">${u.points} pts</span></td>
-                <td>${u.isPremium ? '⭐ Premium' : 'Normal'}</td>
-                <td>
-                    <button class="action-mini-btn cheat-btn" onclick="ajouterPointsCheat('${u.email}')">+500 pts</button>
-                    <button class="action-mini-btn premium-toggle-btn" onclick="toggleUserPremium('${u.email}')">Forcer</button>
-                </td>
-            `;
-            adminUsersTable.appendChild(tr);
-        });
-    }
-
-    window.ajouterPointsCheat = function(email) {
-        let users = JSON.parse(localStorage.getItem('users'));
-        let u = users.find(user => user.email === email);
-        if (u) {
-            u.points += 500;
-            if (u.points >= 1000) { u.isPremium = true; }
-            localStorage.setItem('users', JSON.stringify(users));
+            });
+            const musiques = await response.json();
             
-            if (currentUser && currentUser.email === email) { 
-                currentUser.points = u.points;
-                currentUser.isPremium = u.isPremium;
-            }
-            logServeur(`[Admin] Points ajoutés à ${u.username}`);
-            updateUI();
-        }
-    };
+            musicGrid.innerHTML = ''; // Vide l'écran
+            
+            // Ajouter le morceau par défaut
+            musicGrid.innerHTML = `
+                <div class="music-card">
+                    <p>Chill Day</p><div class="artist">LAKEY INSPIRED</div>
+                    <audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+                </div>
+            `;
 
-    window.toggleUserPremium = function(email) {
-        let users = JSON.parse(localStorage.getItem('users'));
-        let u = users.find(user => user.email === email);
-        if (u) {
-            u.isPremium = !u.isPremium;
-            if (u.isPremium && u.points < 1000) { u.points = 1000; }
-            localStorage.setItem('users', JSON.stringify(users));
-            if (currentUser && currentUser.email === email) { currentUser.isPremium = u.isPremium; currentUser.points = u.points; }
-            updateUI();
+            // Ajouter les morceaux du vrai serveur
+            musiques.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'music-card';
+                card.innerHTML = `<p>${m.titre}</p><div class="artist">${m.artiste}</div><audio controls src="${m.url_audio}"></audio>`;
+                musicGrid.appendChild(card);
+            });
+            logStatus("Musiques mondiales synchronisées avec succès !");
+        } catch (error) {
+            logStatus("Erreur de connexion au cloud.");
         }
-    };
+    }
 
-    // Modération contextuelle
-    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    // ENVOYER UNE NOUVELLE MUSIQUE AU SERVEUR GLOBAL
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const title = document.getElementById('musicTitle').value;
-        const artist = document.getElementById('musicArtist').value;
+        const titre = document.getElementById('musicTitle').value;
+        const artiste = document.getElementById('musicArtist').value;
+        const url_audio = document.getElementById('musicUrl').value;
         const context = document.getElementById('musicContext').value.toLowerCase();
-        const fileInput = document.getElementById('musicFile');
-        const file = fileInput.files[0];
 
-        if (!file) return;
+        // Modération intelligente
+        let texteComplet = (titre + " " + artiste).toLowerCase();
+        let grosMot = insultesGraves.some(word => texteComplet.includes(word) || context.includes(word));
+        let pourLeRythme = context.includes("rythme") || context.includes("rap");
 
-        logServeur(`Analyse du morceau par TRANSFR MUSIC...`);
-        let texteTitreEtArtiste = (title + " " + artist).toLowerCase();
-        let grosMotDansTitre = insultesGraves.some(word => texteTitreEtArtiste.includes(word));
-        let grosMotDansParoles = insultesGraves.some(word => context.includes(word));
-        let pourLeRythme = context.includes("rythme") || context.includes("rap") || context.includes("style") || context.includes("sens");
+        if (grosMot && !pourLeRythme) {
+            alert("Refusé par la modération !");
+            return;
+        }
 
-        setTimeout(() => {
-            if (grosMotDansTitre) {
-                logServeur(`[REFUSÉ] Gros mot détecté dans le TITRE ou l'ARTISTE.`, "error");
-                alert("Le serveur a refusé : Pas de gros mots visibles dans le titre !");
-            } 
-            else if (grosMotDansParoles && !pourLeRythme) {
-                logServeur(`[REFUSÉ] Insulte détectée sans contexte artistique.`, "error");
-                alert("Le serveur a détecté une insulte gratuite non justifiée par le rythme.");
+        if (SUPABASE_URL.includes("METS_TON_URL")) {
+            alert("Action impossible : Tu dois connecter ton vrai serveur Supabase pour envoyer en ligne !");
+            return;
+        }
+
+        logStatus("Envoi du morceau vers internet...");
+
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/musiques`, {
+                method: 'POST',
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({ titre, artiste, url_audio })
+            });
+
+            if (response.ok) {
+                alert("Parfait ! Ta musique est en ligne sur tous les appareils !");
+                this.reset();
+                chargerMusiquesMondiales(); // Recharge la liste
             }
-            else if (grosMotDansParoles && pourLeRythme) {
-                logServeur(`[APPROUVÉ - RYTHME] Validé par l'IA : Utilisé artistiquement pour le rythme.`, "warning");
-                publierMusique(title, artist, file);
-            }
-            else {
-                logServeur(`[APPROUVÉ] Morceau conforme et sécurisé.`, "success");
-                publierMusique(title, artist, file);
-            }
-        }, 800);
-
-        this.reset();
+        } catch (error) {
+            alert("Erreur lors de l'envoi en ligne.");
+        }
     });
 
-    function publierMusique(title, artist, file) {
-        const fileURL = URL.createObjectURL(file);
-        const card = document.createElement('div');
-        card.className = 'music-card';
-        card.innerHTML = `<p>${title}</p><div class="artist">${artist}</div><audio controls src="${fileURL}"></audio>`;
-        musicGrid.appendChild(card);
-        alert("TRANSFR MUSIC a publié ta musique !");
-    }
+    // Charger les morceaux dès qu'on arrive sur la page
+    chargerMusiquesMondiales();
 </script>
-
 </body>
 </html>
