@@ -8,6 +8,7 @@
         :root {
             --primary-color: #1ed760;
             --bg-dark: #121212;
+            --bg-card: #181818;
             --bg-section: #242424;
             --text-color: #ffffff;
         }
@@ -25,6 +26,7 @@
             padding: 15px 30px;
             background-color: var(--primary-color);
             color: #000000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .logo { font-size: 24px; font-weight: bold; }
         .nav-buttons { display: flex; gap: 10px; align-items: center; }
@@ -37,14 +39,47 @@
             cursor: pointer;
             font-weight: bold;
             text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
         }
+        .btn:hover { transform: scale(1.05); }
+        .btn-page { background-color: #ffffff; color: #000000; }
+        .btn-admin { background-color: #000000; color: var(--primary-color); border: 1px solid var(--primary-color); }
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .user-status { font-weight: bold; margin-right: 10px; color: #000000; }
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
         .section {
             background-color: var(--bg-section);
             padding: 25px;
             margin-bottom: 25px;
             border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+        h2 { margin-top: 0; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; }
+        input {
+            width: 100%; padding: 12px; margin: 8px 0;
+            border-radius: 6px; border: 1px solid #444;
+            background-color: #333; color: white; box-sizing: border-box;
+        }
+        .points-box {
+            background-color: #181818; border: 2px solid var(--primary-color);
+            padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-size: 18px;
+        }
+        .points-count { font-weight: bold; color: var(--primary-color); font-size: 24px; }
+        .server-log {
+            background-color: #000; color: #00ff00; font-family: 'Courier New', monospace;
+            padding: 15px; border-radius: 6px; max-height: 120px; overflow-y: auto; font-size: 14px;
+        }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
+        .admin-table th { background-color: #181818; color: var(--primary-color); }
+        .auth-form { display: none; max-width: 400px; margin: 0 auto; }
+        .submit-btn {
+            background-color: var(--primary-color); color: #000; font-weight: bold;
+            cursor: pointer; border: none; padding: 12px; border-radius: 6px; width: 100%; margin-top: 10px;
+        }
+        .switch-form-link { text-align: center; margin-top: 15px; font-size: 14px; color: #aaa; cursor: pointer; }
+        .switch-form-link span { color: var(--primary-color); text-decoration: underline; }
         footer { text-align: center; margin-top: 40px; font-size: 14px; }
         footer a { color: var(--primary-color); text-decoration: none; }
     </style>
@@ -54,14 +89,65 @@
 <header>
     <div class="logo">♪ TRANSFR MUSIC</div>
     <div class="nav-buttons">
-        <a href="musique.html" class="btn" style="background-color: white; color: black;">📻 Aller aux Musiques</a>
+        <span class="user-status" id="headerUserStatus">Visiteur</span>
+        <a href="musique.html" class="btn btn-page">📻 Aller aux Musiques</a>
+        <button class="btn btn-admin" id="adminPanelBtn">🔑 Zone Admin</button>
+        <button class="btn" id="loginNavBtn">Se connecter</button>
+        <button class="btn" id="registerNavBtn">Créer un compte</button>
+        <button class="btn btn-danger" id="logoutNavBtn" style="display: none;">Déconnexion</button>
     </div>
 </header>
 
 <div class="container">
+
+    <div class="section points-box" id="pointsBox" style="display: none;">
+        ⏱️ Temps d'écoute TRANSFR MUSIC : <span id="timeOnline">0</span> minute(s) = 
+        <span class="points-count" id="userPoints">0</span> / 1000 Points TRANSFR 🪙
+        <div id="pointsMessage" style="font-size: 14px; color: #aaa; margin-top: 5px;">Reste connecté pour gagner 1 point toutes les minutes.</div>
+    </div>
+
+    <div class="section auth-form" id="registerSection">
+        <h2>Créer un compte</h2>
+        <form id="registerForm">
+            <input type="text" id="regUsername" placeholder="Nom d'utilisateur" required>
+            <input type="email" id="regEmail" placeholder="Adresse e-mail" required>
+            <input type="password" id="regPassword" placeholder="Mot de passe" required>
+            <button type="submit" class="submit-btn">S'inscrire</button>
+        </form>
+        <div class="switch-form-link" id="toLoginLink">Déjà un compte ? <span>Se connecter</span></div>
+    </div>
+
+    <div class="section auth-form" id="loginSection">
+        <h2>Se connecter</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Adresse e-mail" required>
+            <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+            <button type="submit" class="submit-btn">Connexion</button>
+        </form>
+        <div class="switch-form-link" id="toRegisterLink">Pas encore de compte ? <span>Créer un compte</span></div>
+    </div>
+
     <div class="section">
         <h2>Bienvenue sur TRANSFR MUSIC !</h2>
         <p>Découvre notre univers musical, écoute de super morceaux, et reste connecté pour ne rien rater des nouveautés de la radio !</p>
+        <p>Connecte-toi pour commencer à accumuler tes points d'écoute. Une fois les 1000 points atteints, ton compte passera automatiquement en mode <strong>Premium</strong> et tu pourras publier tes propres musiques sur la page des morceaux !</p>
+    </div>
+
+    <div class="section">
+        <h2>🖥️ Serveur Central TRANSFR MUSIC</h2>
+        <div class="server-log" id="serverLog">
+            [Système] Serveur d'accueil en ligne. Prêt pour la synchronisation.
+        </div>
+    </div>
+
+    <div class="section" id="adminSection" style="display: none;">
+        <h2>🛠️ Panneau du Directeur</h2>
+        <table class="admin-table">
+            <thead>
+                <tr><th>Utilisateur</th><th>Email</th><th>Points</th><th>Statut</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="adminUsersTable"></tbody>
+        </table>
     </div>
 </div>
 
@@ -69,5 +155,160 @@
     <a href="confidentialite.html">Politique de Confidentialité</a>
 </footer>
 
+<script>
+    let currentUser = null;
+    let timerPoints = null;
+
+    if (!localStorage.getItem('users')) localStorage.setItem('users', JSON.stringify([]));
+
+    const registerSection = document.getElementById('registerSection');
+    const loginSection = document.getElementById('loginSection');
+    const adminSection = document.getElementById('adminSection');
+    const serverLog = document.getElementById('serverLog');
+    const adminUsersTable = document.getElementById('adminUsersTable');
+    const pointsBox = document.getElementById('pointsBox');
+    const userPointsSpan = document.getElementById('userPoints');
+    const timeOnlineSpan = document.getElementById('timeOnline');
+    const pointsMessage = document.getElementById('pointsMessage');
+    
+    const loginNavBtn = document.getElementById('loginNavBtn');
+    const registerNavBtn = document.getElementById('registerNavBtn');
+    const logoutNavBtn = document.getElementById('logoutNavBtn');
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+    const headerUserStatus = document.getElementById('headerUserStatus');
+
+    function logServeur(msg) {
+        const time = new Date().toLocaleTimeString();
+        serverLog.innerHTML += `<br><span style="color:#1ed760">[${time}] ${msg}</span>`;
+        serverLog.scrollTop = serverLog.scrollHeight;
+    }
+
+    registerNavBtn.addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
+    loginNavBtn.addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
+    document.getElementById('toLoginLink').addEventListener('click', () => { closeAllForms(); loginSection.style.display = 'block'; });
+    document.getElementById('toRegisterLink').addEventListener('click', () => { closeAllForms(); registerSection.style.display = 'block'; });
+    function closeAllForms() { registerSection.style.display = 'none'; loginSection.style.display = 'none'; }
+
+    adminPanelBtn.addEventListener('click', () => {
+        let code = prompt("Code secret Directeur :");
+        if (code === "1944") {
+            adminSection.style.display = adminSection.style.display === 'none' ? 'block' : 'none';
+            updateAdminPanel();
+        } else { alert("Code faux !"); }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+        let users = JSON.parse(localStorage.getItem('users'));
+        if (users.find(u => u.email === email)) { alert("Email déjà pris !"); return; }
+        
+        users.push({ username, email, password, points: 0, isPremium: false });
+        localStorage.setItem('users', JSON.stringify(users));
+        logServeur(`Nouveau compte : ${username}`);
+        this.reset(); closeAllForms(); loginSection.style.display = 'block';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        let users = JSON.parse(localStorage.getItem('users'));
+        let user = users.find(u => u.email === email && u.password === password);
+        
+        if (user) { 
+            currentUser = user;
+            localStorage.setItem('session_user', JSON.stringify(currentUser));
+            closeAllForms(); 
+            updateUI(); 
+            demarrerCompteurPoints();
+            logServeur(`${currentUser.username} est connecté.`);
+        } else { alert("Identifiants faux !"); }
+    });
+
+    logoutNavBtn.addEventListener('click', () => {
+        clearInterval(timerPoints);
+        logServeur(`${currentUser.username} s'est déconnecté.`);
+        currentUser = null;
+        localStorage.removeItem('session_user');
+        updateUI();
+    });
+
+    function demarrerCompteurPoints() {
+        clearInterval(timerPoints);
+        timerPoints = setInterval(() => {
+            if (currentUser && !currentUser.isPremium) {
+                currentUser.points += 1;
+                let users = JSON.parse(localStorage.getItem('users'));
+                let u = users.find(user => user.email === currentUser.email);
+                if (u) {
+                    u.points = currentUser.points;
+                    if (u.points >= 1000) {
+                        u.isPremium = true;
+                        currentUser.isPremium = true;
+                        alert("Félicitations ! Tu es Premium !");
+                    }
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('session_user', JSON.stringify(currentUser));
+                }
+                updateUI();
+            }
+        }, 60000); 
+    }
+
+    function updateUI() {
+        const savedSession = localStorage.getItem('session_user');
+        if (savedSession) currentUser = JSON.parse(savedSession);
+
+        if (currentUser) {
+            loginNavBtn.style.display = 'none'; registerNavBtn.style.display = 'none'; logoutNavBtn.style.display = 'block';
+            pointsBox.style.display = 'block';
+            userPointsSpan.textContent = currentUser.points;
+            timeOnlineSpan.textContent = currentUser.points;
+
+            if (currentUser.isPremium) {
+                headerUserStatus.textContent = currentUser.username + " (⭐ Premium)";
+                pointsMessage.innerHTML = "🏆 Statut Premium Activé !";
+            } else {
+                headerUserStatus.textContent = currentUser.username + " (Membre)";
+            }
+        } else {
+            loginNavBtn.style.display = 'block'; registerNavBtn.style.display = 'block'; logoutNavBtn.style.display = 'none';
+            headerUserStatus.textContent = "Visiteur"; pointsBox.style.display = 'none';
+        }
+        updateAdminPanel();
+    }
+
+    function updateAdminPanel() {
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        adminUsersTable.innerHTML = '';
+        users.forEach((u) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${u.username}</td><td>${u.email}</td><td>${u.points} pts</td><td>${u.isPremium?'Premium':'Normal'}</td>
+            <td><button onclick="ajouterPointsCheat('${u.email}')">+500 pts</button></td>`;
+            adminUsersTable.appendChild(tr);
+        });
+    }
+
+    window.ajouterPointsCheat = function(email) {
+        let users = JSON.parse(localStorage.getItem('users'));
+        let u = users.find(user => user.email === email);
+        if (u) {
+            u.points += 500;
+            if (u.points >= 1000) u.isPremium = true;
+            localStorage.setItem('users', JSON.stringify(users));
+            if (currentUser && currentUser.email === email) {
+                currentUser.points = u.points; currentUser.isPremium = u.isPremium;
+                localStorage.setItem('session_user', JSON.stringify(currentUser));
+            }
+            updateUI();
+        }
+    };
+
+    updateUI();
+    if(localStorage.getItem('session_user')) demarrerCompteurPoints();
+</script>
 </body>
 </html>
